@@ -44,6 +44,52 @@ function useScrollToTopOrSection() {
   }, [location]);
 }
 
+function TipSidebar({ tip }) {
+  const [isActive, setIsActive] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div 
+      className={`fixed right-0 top-1/2 z-50 transform -translate-y-1/2 transition-transform duration-300 ${
+        isActive ? 'translate-x-0' : 'translate-x-[calc(100%-40px)]'
+      }`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        if (!isActive) setIsHovered(false);
+      }}
+    >
+      <div className="relative">
+        {/* Handle */}
+        <div 
+          className="absolute left-0 w-10 h-24 bg-gruvbox-dark2 rounded-l-lg cursor-pointer flex items-center justify-center hover:bg-gruvbox-dark1 transition-colors"
+          onClick={() => setIsActive(!isActive)}
+        >
+          <span className="text-gruvbox-aqua transform -rotate-90 text-sm font-bold tracking-wide">
+            {isHovered || isActive ? 'TIPS' : '🐧'}
+          </span>
+        </div>
+
+        {/* Content */}
+        <div className="ml-10 bg-gruvbox-dark0 p-6 rounded-l-lg border border-gruvbox-dark2 shadow-terminal w-64">
+          <h3 className="text-gruvbox-yellow mb-3 text-sm font-mono">// PRO TIP</h3>
+          <p className="text-sm text-gruvbox-light1 leading-relaxed mb-4">{tip}</p>
+          <div className="flex justify-center">
+            <Donut />
+          </div>
+          {isActive && (
+            <button
+              className="absolute top-2 right-2 text-gruvbox-light1 hover:text-gruvbox-aqua transition-colors"
+              onClick={() => setIsActive(false)}
+            >
+              ×
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [officers] = useState([
     {
@@ -84,37 +130,44 @@ function App() {
   return (
     <Router>
       <ScrollHandler />
-      <div className="bg-gruvboxBg text-gruvboxFg min-h-screen">
-        {/* Navigation */}
-        <nav className="fixed w-full bg-gruvboxBg text-gruvboxFg p-4 shadow-lg z-50">
-          <ul className="flex justify-between sm:justify-center flex-wrap space-x-8">
-            <li className="flex-grow sm:flex-grow-0">
-              <Link to="/?section=home" className="cursor-pointer">Home</Link>
-            </li>
-            <li className="flex-grow sm:flex-grow-0">
-              <Link to="/?section=whatwedo" className="cursor-pointer">What We Do</Link>
-            </li>
-            <li className="flex-grow sm:flex-grow-0">
-              <Link to="/?section=officers" className="cursor-pointer">Officers</Link>
-            </li>
-            <li className="flex-grow sm:flex-grow-0">
-              <Link to="/terminal-commands" className="cursor-pointer">Terminal Commands</Link>
-            </li>
-            <li className="flex-grow sm:flex-grow-0">
-              <Link to="/videos" className="cursor-pointer">Videos</Link>
-            </li>
-            <li className="flex-grow sm:flex-grow-0">
-              <Link to="/resources" className="cursor-pointer">Resources</Link>
-            </li>
+      <div className="bg-gruvbox-bg text-gruvbox-fg min-h-screen font-fira-code">
+        {/* Improved Navigation */}
+        <nav className="fixed w-full bg-gruvbox-bg/95 backdrop-blur-sm border-b border-gruvbox-dark2 shadow-terminal z-50">
+          <ul className="max-w-7xl mx-auto flex flex-wrap justify-center gap-4 sm:gap-8 p-4">
+            {[
+              { name: 'Home', section: 'home' },
+              { name: 'What We Do', section: 'whatwedo' },
+              { name: 'Officers', section: 'officers' },
+              { name: 'Terminal', path: 'terminal-commands' },
+              { name: 'Videos', path: 'videos' },
+              { name: 'Resources', path: 'resources' },
+            ].map((item) => (
+              <li key={item.name}>
+                <Link
+                  to={item.path ? `/${item.path}` : `/?section=${item.section}`}
+                  className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors duration-200 text-sm sm:text-base"
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
 
+        <TipSidebar tip={randomTip} />
+
         <Routes>
           <Route path="/" element={<Home officers={officers} randomTip={randomTip} />} />
-          <Route path="/videos" element={<Videos />} />
-          <Route path="/resources" element={<Resources />} />
-          <Route path="/terminal-commands" element={<TerminalCommands />} />
+          {/* ... keep other routes */}
         </Routes>
+
+        {/* Footer */}
+        <footer className="border-t border-gruvbox-dark2 mt-16 py-8 text-center text-sm text-gruvbox-dark1">
+          <div className="max-w-7xl mx-auto px-4">
+            <p className="mb-2">LUGNUTS @ UTA - Open Source, Open Mind</p>
+            <p>🚀 Powered by Linux and Vim</p>
+          </div>
+        </footer>
       </div>
     </Router>
   );
@@ -153,120 +206,132 @@ function Home({ officers, randomTip }) {
 
   return (
     <>
-      {/* Homepage Section */}
-      <div id="home" className="section min-h-screen flex flex-col items-center justify-center relative px-4">
-        <div className="text-center mb-6">
-          <div className="header-art text-gruvboxGreen text-center mb-6 z-50">
-            {`
-    ______   ________  ________       _______  ________  ________  ________ 
-  //      \\ /    /   \\/        \\    //   /   \\/    /   \\/        \\/        \\
- //       //         /       __/   //        /         /        _/        _/
-//        //         /       / /   /         /         //       //-        / 
-\\________/\\________/\\________/    \\__/_____/\\________/ \\______/ \\________/  
-            `}
+      {/* Hero Section */}
+      <section id="home" className="pt-32 pb-16 px-4 sm:px-8">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="terminal-header mb-8 p-6 rounded-lg bg-gruvbox-dark0 border border-gruvbox-dark2">
+            <h1 className="text-5xl sm:text-6xl font-bold text-gruvbox-aqua mb-6 glitch" data-text="LUG_NUTS">
+              LUG_NUTS
+            </h1>
+            <p className="text-xl text-gruvbox-light1 mb-6">$ sudo apt-get install knowledge</p>
+            <div className="inline-block px-6 py-3 bg-gruvbox-dark2 rounded-md text-gruvbox-orange">
+              <span className="blink">▋</span> University of Texas at Arlington
+            </div>
           </div>
-          <h1 className="text-4xl font-bold text-gruvboxYellow mb-4 z-50">LUG Nuts</h1>
-          <p className="text-xl z-50">Welcome to the official Linux User Group of UTA. Dive into Linux, open-source, and cybersecurity with us!</p>
-          <p className="text-xl text-gruvboxOrange mt-4 mb-4 z-50">
-            LUG Nuts is the official Linux User Group at The University of Texas at Arlington, fostering a community of students interested in Linux,
-            open-source software, and system administration. Our group is open to everyone, from Linux newcomers to seasoned sysadmins.
-          </p>
-          <div className="mt-8 z-50">
-            <pre className="bg-gruvboxOrange p-6 text-center rounded shadow-md max-w-4xl z-50">
-              {`
-# Welcome to the Linux User Group at UTA
-echo "LUG Nuts at UTA"
-echo "Explore. Learn. Hack."
-sudo apt-get install knowledge
-              `}
-            </pre>
-          </div>
-        </div>
-      </div>
 
-      {/* Terminal Simulation Section */}
-      <div className="section flex items-center justify-center bg-gruvboxBg text-gruvboxFg px-8 py-8 relative z-20">
-        <div className="terminal bg-gruvboxFg text-gruvboxBg p-6 rounded w-full max-w-md">
-          <div className="terminal-output">
-            {terminalOutput.map((output, index) => (
-              <div key={index} className="mb-2 text-gruvboxYellow">{output}</div>
-            ))}
-          </div>
-          <form onSubmit={handleCommand}>
-            <label className="block text-gruvboxYellow">Type a command:</label>
-            <input
-              type="text"
-              value={terminalInput}
-              onChange={(e) => setTerminalInput(e.target.value)}
-              className="w-full bg-transparent border-b-2 border-gruvboxYellow text-gruvboxYellow focus:outline-none"
-              placeholder="e.g., ls, meow, echo Hello"
-            />
-          </form>
-        </div>
-      </div>
 
-      {/* Events & Workshops Section */}
-      <div id="whatwedo" className="section min-h-screen flex items-center justify-center bg-gruvboxGreen text-gruvboxFg px-4 sm:px-8 py-16 relative z-10">
-        <div className="text-center z-10">
-          <h2 className="text-3xl font-bold mb-8">Events & Workshops</h2>
-          <p className="text-xl mb-6">
-            Join us for regular workshops covering topics like:
-          </p>
-          <ul className="list-disc list-inside text-left space-y-2">
-            <li>System Administration and Linux Shell Scripting</li>
-            <li>Networking, Firewalls, and Security</li>
-            <li>Kernel Configuration and Optimization</li>
-            <li>Linux Certifications: LPIC-1, RHCSA, and more</li>
-            <li>Collaborative Open-Source Projects</li>
-          </ul>
-          <div className="mt-8">
-            <pre className="bg-gruvboxOrange p-6 text-center rounded shadow-md max-w-4xl">
-              {`
-# Example Linux Workshop Command
-sudo systemctl restart apache2
-echo "Restarting the Apache server..."
-              `}
-            </pre>
+        </div>
+      </section>
+
+      {/* Terminal Section */}
+      <section className="py-16 px-4 sm:px-8 bg-gruvbox-dark0">
+        <div className="max-w-3xl mx-auto terminal-container rounded-lg overflow-hidden shadow-terminal">
+          <div className="terminal-header bg-gruvbox-dark2 px-4 py-2 flex items-center">
+            <div className="flex space-x-2">
+              <div className="w-3 h-3 rounded-full bg-gruvbox-red"></div>
+              <div className="w-3 h-3 rounded-full bg-gruvbox-yellow"></div>
+              <div className="w-3 h-3 rounded-full bg-gruvbox-green"></div>
+            </div>
+          </div>
+          <div className="p-4 h-64 overflow-y-auto">
+            <div className="terminal-output font-mono text-sm">
+              {terminalOutput.map((output, index) => (
+                <div key={index} className="mb-1 text-gruvbox-light1">
+                  <span className="text-gruvbox-green">$</span> {output}
+                </div>
+              ))}
+            </div>
+            <form onSubmit={handleCommand} className="flex items-center mt-2">
+              <span className="text-gruvbox-green mr-2">$</span>
+              <input
+                type="text"
+                value={terminalInput}
+                onChange={(e) => setTerminalInput(e.target.value)}
+                className="flex-1 bg-transparent text-gruvbox-light1 focus:outline-none caret-gruvbox-aqua"
+                placeholder="Enter command..."
+              />
+            </form>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* What We Do Section */}
+      <section id="whatwedo" className="py-16 px-4 sm:px-8 bg-gruvbox-dark1">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-gruvbox-aqua mb-8 text-center">[root@UTA ~]# what_we_do</h2>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="p-6 bg-gruvbox-dark0 rounded-lg border border-gruvbox-dark2">
+              <h3 className="text-xl text-gruvbox-yellow mb-4">Events & Workshops</h3>
+              <ul className="space-y-3">
+                {[
+                  'Kernel Development Sessions',
+                  'CTF Competitions',
+                  'Open Source Contributions',
+                  'Linux Distro Showdowns',
+                  'SysAdmin Bootcamps'
+                ].map((item, index) => (
+                  <li key={index} className="flex items-center text-gruvbox-light1">
+                    <span className="text-gruvbox-green mr-2">▶</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="p-6 bg-gruvbox-dark0 rounded-lg border border-gruvbox-dark2">
+              <h3 className="text-xl text-gruvbox-yellow mb-4">Community Features</h3>
+              <div className="space-y-4">
+                <div className="p-4 bg-gruvbox-dark2 rounded-md">
+                  <h4 className="text-gruvbox-blue mb-2">Collaborative Projects</h4>
+                  <p className="text-sm text-gruvbox-light1">Contribute to our GitHub organization</p>
+                </div>
+                <div className="p-4 bg-gruvbox-dark2 rounded-md">
+                  <h4 className="text-gruvbox-blue mb-2">Mentorship Program</h4>
+                  <p className="text-sm text-gruvbox-light1">Learn from experienced members</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Officers Section */}
-      <div id="officers" className="section min-h-screen flex flex-col items-center justify-center bg-gruvboxRed z-10 px-4 sm:px-8 py-16">
-        <div className="text-center text-gruvboxFg max-w-4xl">
-          <h2 className="text-4xl font-bold mb-6">Meet the Officers</h2>
-          <div className="officer-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section id="officers" className="py-16 px-4 sm:px-8 bg-gruvbox-dark0">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-gruvbox-aqua mb-12 text-center">sudo make leadership</h2>
+          
+          <div className="grid md:grid-cols-3 gap-8">
             {officers.map((officer, index) => (
-              <div key={index} className="mt-10 flex flex-col items-center text-center">
-                <img
-                  src={officer.photo}
-                  alt={officer.name}
-                  className="rounded-full w-24 h-24 sm:w-32 sm:h-32 object-cover mb-4 shadow-lg"
-                />
-                <h3 className="text-2xl font-bold">{officer.name}</h3>
-                <p className="text-gruvboxYellow">{officer.role}</p>
-                <p className="text-sm">{officer.description}</p>
+              <div key={index} className="group bg-gruvbox-dark1 rounded-lg p-6 border border-gruvbox-dark2 hover:border-gruvbox-aqua transition-all duration-300">
+                <div className="relative mb-6">
+                  <img
+                    src={officer.photo}
+                    alt={officer.name}
+                    className="w-full h-64 object-cover rounded-md grayscale group-hover:grayscale-0 transition-all duration-300"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gruvbox-dark2/90 p-3">
+                    <h3 className="text-lg font-bold text-gruvbox-light1">{officer.name}</h3>
+                    <p className="text-sm text-gruvbox-green">{officer.role}</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gruvbox-light1 leading-relaxed">{officer.description}</p>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Floating Donut and Tips */}
-      <div className="floating-elements absolute bottom-[-150px] left-0 right-0 z-40">
-        <div className="flex justify-between items-center">
-          {/* Donut positioned outside 'home' */}
-          <div className="donut-container relative ml-8 text-xs"> {/* Made text smaller here */}
+      {/* Donut & Tips Section
+      <div className="flex-col content-center z-50 hidden md:block">
+        <div className="bg-gruvbox-dark0 p-6 rounded-lg border border-gruvbox-dark2 shadow-terminal w-64">
+          <h3 className="text-gruvbox-yellow mb-3">[ TIP ]</h3>
+          <p className="text-sm text-gruvbox-light1 leading-relaxed">{randomTip}</p>
+          <div className="mt-4">
             <Donut />
           </div>
-
-          {/* Informational Text Box */}
-          <div className="information-box mr-8 text-sm"> {/* Made the tip text smaller here */}
-            <h3 className="text-xl font-bold mb-2">Tip of the Day</h3>
-            <p className="text-base">{randomTip}</p>
-          </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
