@@ -43,7 +43,7 @@ function Donut() {
   }, []);
 
   return (
-    <div className="flex justify-center items-center mt-10 text-gruvboxFg">
+    <div className=" text-gruvboxFg">
       <pre ref={donutRef} className="text-sm leading-tight text-center" style={{ fontFamily: 'monospace' }}></pre>
     </div>
   );
