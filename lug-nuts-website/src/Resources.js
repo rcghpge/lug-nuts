@@ -3,7 +3,7 @@ import React from 'react';
 function Resources() {
   return (
     <div className="min-h-screen bg-gruvboxBg text-gruvboxFg flex flex-col items-center justify-center px-8 py-12">
-      <h2 className="text-4xl font-bold mb-8 text-gruvboxYellow">Linux Resources</h2>
+      <h2 className="text-4xl font-bold mb-8 mt-20 text-gruvboxYellow">Linux Resources</h2>
 
       <ul className="list-disc list-inside space-y-4 text-left">
         {/* General Distros */}

@@ -3,7 +3,7 @@ import React from 'react';
 function Videos() {
   return (
     <div className="min-h-screen bg-gruvboxGreen text-gruvboxFg flex flex-col items-center justify-center px-8 py-12">
-      <h2 className="text-4xl font-bold mb-8">Linux Video Tutorials</h2>
+      <h2 className="text-4xl font-bold mt-20 mb-8">Linux Video Tutorials</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div>
