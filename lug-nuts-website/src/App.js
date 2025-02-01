@@ -112,7 +112,7 @@ function App() {
     'Command: "cd ~" to return home',
     'Tip: Use "cd ../.." to move up two levels',
     'Command: "pwd" shows current directory',
-    'Quote: "Software is like sex: it\'s better when it\'s free." - Linus Torvalds',
+    'Quote: "A computer is like air conditioning - it becomes useless when you open Windows." - Linus Torvalds',
     'Tip: Chain commands with "&&" (e.g., cd Projects && ls)'
   ];
 
