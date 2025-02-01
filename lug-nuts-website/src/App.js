@@ -2,33 +2,23 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import { scroller } from 'react-scroll';
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
-
-// Separate Pages
+import Donut from './Donut';
+import Footer from './Footer';
+import JeremiahPhoto from './assets/images/Jeremiah.png';
+import BetimPhoto from './assets/images/Betim.jpg';
+import CatPhoto from './assets/images/Cat.png';
 import Videos from './Videos';
 import Resources from './Resources';
 import TerminalCommands from './TerminalCommands';
 
-// Shared Components
-import Donut from './Donut';
-
-// Officer Photos
-import JeremiahPhoto from './assets/images/Jeremiah.png';
-import BetimPhoto from './assets/images/Betim.jpg';
-import BrettPhoto from './assets/images/Brett.png';
-
-// ===========================
-// 1) Scroll-to-section Hook
-// ===========================
+// Scroll handler hook
 function useScrollToTopOrSection() {
   const location = useLocation();
 
   useEffect(() => {
-    // If the URL has ?section=whatever, scroll to that section
     const params = new URLSearchParams(location.search);
     const section = params.get('section');
-
-    // If you have a fixed navbar, adjust offset here:
-    const navbarHeight = 0; // update if needed
+    const navbarHeight = 0;
 
     if (location.pathname === '/') {
       if (section) {
@@ -38,19 +28,15 @@ function useScrollToTopOrSection() {
           offset: -navbarHeight,
         });
       } else {
-        // If no section specified, just scroll to top
         window.scrollTo(0, 0);
       }
     } else {
-      // On any other page, always scroll to top on mount
       window.scrollTo(0, 0);
     }
   }, [location]);
 }
 
-// ===========================
-// 2) Tip Sidebar Component
-// ===========================
+// Tip sidebar component
 function TipSidebar({ tip }) {
   const [isActive, setIsActive] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -61,12 +47,9 @@ function TipSidebar({ tip }) {
         isActive ? 'translate-x-0' : 'translate-x-[calc(100%-40px)]'
       }`}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        if (!isActive) setIsHovered(false);
-      }}
+      onMouseLeave={() => !isActive && setIsHovered(false)}
     >
       <div className="relative">
-        {/* Sidebar "handle" */}
         <div
           className="absolute left-0 w-10 h-24 bg-gruvbox-dark2 rounded-l-lg cursor-pointer flex items-center justify-center hover:bg-gruvbox-dark1 transition-colors"
           onClick={() => setIsActive(!isActive)}
@@ -75,8 +58,6 @@ function TipSidebar({ tip }) {
             {isHovered || isActive ? 'TIPS' : '🐧'}
           </span>
         </div>
-
-        {/* Sidebar Content */}
         <div className="ml-10 bg-gruvbox-dark0 p-6 rounded-l-lg border border-gruvbox-dark2 shadow-terminal w-64">
           <h3 className="text-gruvbox-yellow mb-3 text-sm font-mono">// PRO TIP</h3>
           <p className="text-sm text-gruvbox-light1 leading-relaxed mb-4">{tip}</p>
@@ -97,185 +78,186 @@ function TipSidebar({ tip }) {
   );
 }
 
-// ===========================
-// 3) Main App
-// ===========================
+// Main App component
 function App() {
-  // Officers Data
   const [officers] = useState([
     {
       name: 'Jeremiah Pitts',
       role: 'President',
       photo: JeremiahPhoto,
-      description:
-        'Jeremiah is passionate about Linux and open-source software. He oversees club operations and organizes workshops.',
+      description: 'Linux and open-source enthusiast overseeing club operations.'
     },
     {
       name: 'Betim Hodza',
       role: 'Co-President',
       photo: BetimPhoto,
-      description:
-        'Betim specializes in system administration and cybersecurity. He oversees club operations and organizes workshops.',
+      description: 'System administration and cybersecurity expert.'
     },
     {
       name: 'Brett Boggs',
       role: 'Event Coordinator',
-      photo: BrettPhoto,
-      description:
-        'Brett specializes in social engineering and cybersecurity. She helps with event planning and technical sessions.',
+      photo: CatPhoto,
+      description: 'Cybersecurity specialist handling event planning.'
     },
+    {
+      name: 'Rose Ramirez',
+      role: 'Treasurer',
+      photo: CatPhoto,
+      description: 'Handles funds and tax info.'
+    }
   ]);
 
-  // Random Tips
   const tips = [
-    'Tip: Use "cd -" to quickly jump back to the previous directory.',
-    'Command: "sudo apt-get update" to refresh package sources.',
-    'Tip: Use "ls -a" to show hidden files.',
-    'Command: "grep -i" for case-insensitive search in files.',
-    'Quote: "Talk is cheap. Show me the code." - Linus Torvalds',
+    'Tip: Use "cd -" to switch to previous directory',
+    'Command: "cd ~" to return home',
+    'Tip: Use "cd ../.." to move up two levels',
+    'Command: "pwd" shows current directory',
+    'Quote: "Software is like sex: it\'s better when it\'s free." - Linus Torvalds',
+    'Tip: Chain commands with "&&" (e.g., cd Projects && ls)'
   ];
-  const randomTip = tips[Math.floor(Math.random() * tips.length)];
 
   return (
     <Router>
       <ScrollHandler />
-      <div className="bg-gruvbox-bg text-gruvbox-fg min-h-screen font-fira-code relative">
-        {/* =====================
-            Navigation
-        ====================== */}
+      <div className="bg-gruvbox-bg text-gruvbox-fg min-h-screen font-fira-code flex flex-col">
         <nav className="fixed w-full bg-gruvbox-bg/95 backdrop-blur-sm border-b border-gruvbox-dark2 shadow-terminal z-50">
           <ul className="max-w-7xl mx-auto flex flex-wrap justify-center gap-4 sm:gap-8 p-4">
-            {/* Home, What We Do, Officers are sections on the homepage */}
-            <li>
-              <Link
-                to="/?section=home"
-                className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/?section=whatwedo"
-                className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
-              >
-                What We Do
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/?section=officers"
-                className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
-              >
-                Officers
-              </Link>
-            </li>
-
-            {/* Terminal, Videos, Resources => separate pages */}
-            <li>
-              <Link
-                to="/terminal-commands"
-                className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
-              >
-                Terminal
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/videos"
-                className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
-              >
-                Videos
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/resources"
-                className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
-              >
-                Resources
-              </Link>
-            </li>
+            {['Home', 'Info', 'Officers'].map((item) => (
+              <li key={item}>
+                <Link
+                  to={`/?section=${item.toLowerCase().replace(' ', '')}`}
+                  className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+                >
+                  {item}
+                </Link>
+              </li>
+            ))}
+            {['Terminal Commands', 'Videos', 'Resources'].map((item) => (
+              <li key={item}>
+                <Link
+                  to={`/${item.toLowerCase().replace(' ', '-')}`}
+                  className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+                >
+                  {item}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
 
-        {/* Tip Sidebar */}
-        <TipSidebar tip={randomTip} />
+        <TipSidebar tip={tips[Math.floor(Math.random() * tips.length)]} />
 
-        {/* Main Routes */}
         <Routes>
-          <Route
-            path="/"
-            element={<Home officers={officers} randomTip={randomTip} />}
-          />
+          <Route path="/" element={<Home officers={officers} />} />
           <Route path="/videos" element={<Videos />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/terminal-commands" element={<TerminalCommands />} />
         </Routes>
 
-        {/* Footer */}
-        <footer className="border-t border-gruvbox-dark2 mt-16 py-8 text-center text-sm text-gruvbox-dark1">
-          <div className="max-w-7xl mx-auto px-4">
-            <p className="mb-2">LUGNUTS @ UTA - Open Source, Open Mind</p>
-            <p>🚀 Powered by Linux and Vim</p>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </Router>
   );
 }
 
+// Scroll handler component
 function ScrollHandler() {
   useScrollToTopOrSection();
   return null;
 }
 
-export default App;
-
-// ===========================
-// 4) Home Page (with sections)
-// ===========================
-function Home({ officers, randomTip }) {
+// Home component with terminal functionality
+function Home({ officers }) {
   const [terminalInput, setTerminalInput] = useState('');
   const [terminalOutput, setTerminalOutput] = useState([]);
+  const [currentDir, setCurrentDir] = useState('~');
+  const [prevDir, setPrevDir] = useState('');
+
+  const getLsOutput = (dir) => {
+    const directories = {
+      '~': 'Projects  Workshops  Events  Officers  Documents',
+      '~/Projects': 'kernel-hacking  ctf-tools  linux-from-scratch',
+      '~/Workshops': 'intro-to-cli  git-101  vim-mastery',
+      '~/Events': 'hacknight  installfest  meetup',
+      '~/Officers': 'jeremiah.txt  betim.jpg  brett.png rose.webp',
+      '/': 'bin  etc  usr  home  var'
+    };
+    return directories[dir] || `Cannot access '${dir}': No such file or directory`;
+  };
+
+  const processCdCommand = (arg, currentDir, prevDir) => {
+    let newDir = currentDir;
+    let output = '';
+
+    if (!arg || arg === '~') {
+      newDir = '~';
+    } else if (arg === '-') {
+      newDir = prevDir;
+      output = `Switched to previous directory: ${prevDir}`;
+    } else if (arg === '..') {
+      const pathParts = currentDir.split('/').filter(p => p);
+      pathParts.pop();
+      newDir = pathParts.length ? pathParts.join('/') : '~';
+    } else if (arg.startsWith('/')) {
+      newDir = arg;
+    } else {
+      newDir = currentDir === '~' ? `~/${arg}` : `${currentDir}/${arg}`;
+    }
+
+    if (!getLsOutput(newDir).includes('Cannot access')) {
+      return { newDir, output };
+    }
+    return { newDir: currentDir, output: `-bash: cd: ${arg}: No such file or directory` };
+  };
 
   const handleCommand = (e) => {
     e.preventDefault();
     let output = '';
+    let newDir = currentDir;
+    
     if (terminalInput === 'ls') {
-      output = 'Projects  Workshops  Events  Officers';
+      output = getLsOutput(currentDir);
     } else if (terminalInput === 'meow') {
       output = `
-/\\_/\\  
-( o.o ) 
- > ^ <
+/\\_/\\\n  
+( o.o )\n 
+ > ^ <\n
       `;
     } else if (terminalInput.startsWith('echo ')) {
       output = terminalInput.replace('echo ', '');
+    } else if (terminalInput.startsWith('cd')) {
+      const arg = terminalInput.split(' ')[1] || '';
+      const result = processCdCommand(arg, currentDir, prevDir);
+      newDir = result.newDir;
+      output = result.output;
+      setPrevDir(currentDir);
+      setCurrentDir(newDir);
+    } else if (terminalInput === 'pwd') {
+      output = currentDir;
+    } else if (terminalInput === 'clear') {
+      setTerminalOutput([]);
+      setTerminalInput('');
+      return;
     } else {
-      output = 'Command not found. Try "ls", "meow", or "echo <message>"';
+      output = `Command not found: ${terminalInput}. Try "ls", "cd", "pwd", or "echo"`;
     }
-    setTerminalOutput([...terminalOutput, `> ${terminalInput}`, output]);
+    
+    setTerminalOutput([
+      ...terminalOutput,
+      { command: terminalInput, output: output, dir: currentDir }
+    ]);
     setTerminalInput('');
   };
 
   return (
     <>
-      {/* =====================
-          Hero Section
-      ====================== */}
       <section id="home" className="pt-32 pb-16 px-4 sm:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <div className="terminal-header mb-8 p-6 rounded-lg bg-gruvbox-dark0 border border-gruvbox-dark2">
-            <h1
-              className="text-5xl sm:text-6xl font-bold text-gruvbox-aqua mb-6 glitch"
-              data-text="LUG_NUTS"
-            >
+            <h1 className="text-5xl sm:text-6xl font-bold text-gruvbox-aqua mb-6 glitch" data-text="LUG_NUTS">
               LUG_NUTS
             </h1>
-            <p className="text-xl text-gruvbox-light1 mb-6">
-              $ sudo apt-get install knowledge
-            </p>
+            <p className="text-xl text-gruvbox-light1 mb-6">$ sudo apt-get install knowledge</p>
             <div className="inline-block px-6 py-3 bg-gruvbox-dark2 rounded-md text-gruvbox-orange">
               <span className="blink">▋</span> University of Texas at Arlington
             </div>
@@ -283,12 +265,8 @@ function Home({ officers, randomTip }) {
         </div>
       </section>
 
-      {/* =====================
-          Terminal Section
-      ====================== */}
       <section className="py-16 px-4 sm:px-8 bg-gruvbox-dark0">
         <div className="max-w-3xl mx-auto terminal-container rounded-lg overflow-hidden shadow-terminal">
-          {/* Terminal Header Lights */}
           <div className="terminal-header bg-gruvbox-dark2 px-4 py-2 flex items-center">
             <div className="flex space-x-2">
               <div className="w-3 h-3 rounded-full bg-gruvbox-red"></div>
@@ -296,50 +274,45 @@ function Home({ officers, randomTip }) {
               <div className="w-3 h-3 rounded-full bg-gruvbox-green"></div>
             </div>
           </div>
-          {/* Terminal Body */}
           <div className="p-4 h-64 overflow-y-auto">
             <div className="terminal-output font-mono text-sm">
-              {terminalOutput.map((output, index) => (
+              {terminalOutput.map((entry, index) => (
                 <div key={index} className="mb-1 text-gruvbox-light1">
-                  <span className="text-gruvbox-green">$</span> {output}
+                  <span className="text-gruvbox-green">lug@nuts:{entry.dir}$ </span>
+                  {entry.command}
+                  {entry.output && <div className="text-gruvbox-light1 mt-1">{entry.output}</div>}
                 </div>
               ))}
             </div>
             <form onSubmit={handleCommand} className="flex items-center mt-2">
-              <span className="text-gruvbox-green mr-2">$</span>
+              <span className="text-gruvbox-green mr-2">lug@nuts:{currentDir}$</span>
               <input
                 type="text"
                 value={terminalInput}
                 onChange={(e) => setTerminalInput(e.target.value)}
                 className="flex-1 bg-transparent text-gruvbox-light1 focus:outline-none caret-gruvbox-aqua"
-                placeholder='Type "ls", "meow", or "echo Hello"...'
+                placeholder='Try "cd Projects", "ls", or "pwd"...'
               />
             </form>
           </div>
         </div>
       </section>
 
-      {/* =====================
-         What We Do Section
-      ====================== */}
-      <section id="whatwedo" className="py-16 px-4 sm:px-8 bg-gruvbox-dark1">
+      <section id="info" className="py-44 px-4 sm:px-8 bg-gruvbox-dark1">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-gruvbox-aqua mb-8 text-center">
-            [root@UTA ~]# what_we_do
+            [root@UTA ~]# info
           </h2>
-
           <div className="grid md:grid-cols-2 gap-8">
             <div className="p-6 bg-gruvbox-dark0 rounded-lg border border-gruvbox-dark2">
-              <h3 className="text-xl text-gruvbox-yellow mb-4">
-                Events & Workshops
-              </h3>
+              <h3 className="text-xl text-gruvbox-yellow mb-4">Events & Workshops</h3>
               <ul className="space-y-3">
                 {[
                   'Kernel Development Sessions',
                   'CTF Competitions',
                   'Open Source Contributions',
                   'Linux Distro Showdowns',
-                  'SysAdmin Bootcamps',
+                  'SysAdmin Bootcamps'
                 ].map((item, index) => (
                   <li key={index} className="flex items-center text-gruvbox-light1">
                     <span className="text-gruvbox-green mr-2">▶</span>
@@ -348,23 +321,16 @@ function Home({ officers, randomTip }) {
                 ))}
               </ul>
             </div>
-
             <div className="p-6 bg-gruvbox-dark0 rounded-lg border border-gruvbox-dark2">
-              <h3 className="text-xl text-gruvbox-yellow mb-4">
-                Community Features
-              </h3>
+              <h3 className="text-xl text-gruvbox-yellow mb-4">Community Features</h3>
               <div className="space-y-4">
                 <div className="p-4 bg-gruvbox-dark2 rounded-md">
                   <h4 className="text-gruvbox-blue mb-2">Collaborative Projects</h4>
-                  <p className="text-sm text-gruvbox-light1">
-                    Contribute to our GitHub organization
-                  </p>
+                  <p className="text-sm text-gruvbox-light1">Contribute to our GitHub organization</p>
                 </div>
                 <div className="p-4 bg-gruvbox-dark2 rounded-md">
                   <h4 className="text-gruvbox-blue mb-2">Mentorship Program</h4>
-                  <p className="text-sm text-gruvbox-light1">
-                    Learn from experienced members
-                  </p>
+                  <p className="text-sm text-gruvbox-light1">Learn from experienced members</p>
                 </div>
               </div>
             </div>
@@ -372,14 +338,9 @@ function Home({ officers, randomTip }) {
         </div>
       </section>
 
-      {/* =====================
-         Officers Section
-      ====================== */}
-      <section id="officers" className="py-16 px-4 sm:px-8 bg-gruvbox-dark0">
+      <section id="officers" className="py-16 px-4 sm:px-8 bg-gruvbox-dark0 mb-12">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-gruvbox-aqua mb-12 text-center">
-            sudo make leadership
-          </h2>
+          <h2 className="text-3xl font-bold text-gruvbox-aqua mb-12 text-center">sudo make leadership</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {officers.map((officer, index) => (
               <div
@@ -393,15 +354,11 @@ function Home({ officers, randomTip }) {
                     className="w-full h-64 object-cover rounded-md grayscale group-hover:grayscale-0 transition-all duration-300"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gruvbox-dark2/90 p-3">
-                    <h3 className="text-lg font-bold text-gruvbox-light1">
-                      {officer.name}
-                    </h3>
+                    <h3 className="text-lg font-bold text-gruvbox-light1">{officer.name}</h3>
                     <p className="text-sm text-gruvbox-green">{officer.role}</p>
                   </div>
                 </div>
-                <p className="text-sm text-gruvbox-light1 leading-relaxed">
-                  {officer.description}
-                </p>
+                <p className="text-sm text-gruvbox-light1 leading-relaxed">{officer.description}</p>
               </div>
             ))}
           </div>
@@ -410,3 +367,5 @@ function Home({ officers, randomTip }) {
     </>
   );
 }
+
+export default App;

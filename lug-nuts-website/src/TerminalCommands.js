@@ -2,48 +2,99 @@ import React from 'react';
 
 function TerminalCommands() {
   return (
-    <div className="min-h-screen bg-gruvboxOrange text-gruvboxFg flex flex-col items-center justify-center px-8 py-12">
-      <h2 className="text-4xl font-bold mb-8 mt-20">Comprehensive Linux Terminal Commands</h2>
+    <div className="min-h-screen bg-gruvboxGray text-gruvboxFg flex flex-col items-center px-8 py-12">
+      <div className="flex-1 w-full max-w-4xl">  {/* Added flex container */}
+        <h2 className="text-4xl font-bold mb-8 mt-20 text-gruvboxDark2">
+          Comprehensive Linux Terminal Commands
+        </h2>
 
-      <div className="max-w-4xl">
-        <h3 className="text-3xl font-bold mb-4">File and Directory Management</h3>
-        <ul className="list-disc list-inside space-y-4 mb-8">
-          <li><code className="bg-gruvboxBg p-1 rounded">ls</code> - Lists all files and directories in the current directory.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">cd [directory]</code> - Changes the current directory to the specified one.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">mkdir [directory]</code> - Creates a new directory.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">rm -r [directory]</code> - Deletes a directory and all its contents.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">cp [source] [destination]</code> - Copies files or directories.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">mv [source] [destination]</code> - Moves or renames files or directories.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">chmod [permissions] [file]</code> - Changes the permissions of a file.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">find [path] -name [filename]</code> - Searches for files and directories.</li>
-        </ul>
+        <div className="w-full space-y-12">
+          {/* File Management Section */}
+          <div className="p-6 bg-gruvboxDark1 rounded-lg shadow-terminal">
+            <h3 className="text-2xl font-bold mb-4 text-gruvboxYellow">File and Directory Management</h3>
+            <ul className="space-y-3">
+              {[
+                {cmd: 'ls', desc: 'List directory contents'},
+                {cmd: 'cd [dir]', desc: 'Change directory'},
+                {cmd: 'mkdir [dir]', desc: 'Create new directory'},
+                {cmd: 'rm -r [dir]', desc: 'Remove directory recursively'},
+                {cmd: 'cp [src] [dest]', desc: 'Copy files/directories'},
+                {cmd: 'mv [src] [dest]', desc: 'Move/rename files/directories'},
+                {cmd: 'chmod [perms] [file]', desc: 'Change file permissions'},
+                {cmd: 'find [path] -name [pattern]', desc: 'Search for files'},
+              ].map((item, index) => (
+                <li key={index} className="flex items-baseline space-x-3 group">
+                  <code className="bg-gruvboxDark2 text-gruvboxGreen px-2 py-1 rounded font-mono group-hover:bg-gruvboxDark0 transition-colors">
+                    {item.cmd}
+                  </code>
+                  <span className="text-gruvboxLight1">{item.desc}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        <h3 className="text-3xl font-bold mb-4">System Monitoring</h3>
-        <ul className="list-disc list-inside space-y-4 mb-8">
-          <li><code className="bg-gruvboxBg p-1 rounded">top</code> - Displays running processes and system resource usage.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">htop</code> - Interactive process viewer (if installed).</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">df -h</code> - Displays disk space usage in a human-readable format.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">free -m</code> - Displays memory usage.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">ps aux</code> - Lists all running processes.</li>
-        </ul>
+          {/* System Monitoring Section */}
+          <div className="p-6 bg-gruvboxDark1 rounded-lg shadow-terminal">
+            <h3 className="text-2xl font-bold mb-4 text-gruvboxBlue">System Monitoring</h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[
+                {cmd: 'top', desc: 'Display system processes'},
+                {cmd: 'htop', desc: 'Interactive process viewer'},
+                {cmd: 'df -h', desc: 'Disk space in human format'},
+                {cmd: 'free -m', desc: 'Memory usage statistics'},
+                {cmd: 'ps aux', desc: 'Snapshot of processes'},
+                {cmd: 'journalctl', desc: 'View systemd logs'},
+              ].map((item, index) => (
+                <div key={index} className="p-3 bg-gruvboxDark2 rounded hover:bg-gruvboxDark0 transition-colors">
+                  <code className="text-gruvboxAqua font-mono">{item.cmd}</code>
+                  <p className="text-sm text-gruvboxLight1 mt-1">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
 
-        <h3 className="text-3xl font-bold mb-4">Networking</h3>
-        <ul className="list-disc list-inside space-y-4 mb-8">
-          <li><code className="bg-gruvboxBg p-1 rounded">ping [hostname]</code> - Sends ICMP requests to test connectivity.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">ifconfig</code> - Displays or configures network interfaces.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">curl [URL]</code> - Transfers data from or to a server.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">scp [source] [destination]</code> - Copies files between hosts over SSH.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">ssh [user]@[host]</code> - Connects to a remote host via SSH.</li>
-        </ul>
+          {/* Networking Section */}
+          <div className="p-6 bg-gruvboxDark1 rounded-lg shadow-terminal">
+            <h3 className="text-2xl font-bold mb-4 text-gruvboxGreen">Networking</h3>
+            <ul className="space-y-3">
+              {[
+                {cmd: 'ping [host]', desc: 'Test network connectivity'},
+                {cmd: 'ifconfig', desc: 'Configure network interfaces'},
+                {cmd: 'curl [URL]', desc: 'Transfer data from URLs'},
+                {cmd: 'wget [URL]', desc: 'Download files from web'},
+                {cmd: 'ssh [user@host]', desc: 'Secure shell connection'},
+                {cmd: 'scp [file] [dest]', desc: 'Secure file copy'},
+              ].map((item, index) => (
+                <li key={index} className="flex items-baseline space-x-3 group">
+                  <code className="bg-gruvboxDark2 text-gruvboxPurple px-2 py-1 rounded font-mono group-hover:bg-gruvboxDark0 transition-colors">
+                    {item.cmd}
+                  </code>
+                  <span className="text-gruvboxLight1">{item.desc}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        <h3 className="text-3xl font-bold mb-4">User Management</h3>
-        <ul className="list-disc list-inside space-y-4">
-          <li><code className="bg-gruvboxBg p-1 rounded">whoami</code> - Displays the current user.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">sudo adduser [username]</code> - Adds a new user.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">sudo deluser [username]</code> - Deletes a user.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">passwd [username]</code> - Changes a user's password.</li>
-          <li><code className="bg-gruvboxBg p-1 rounded">groups [username]</code> - Displays the groups a user belongs to.</li>
-        </ul>
+          {/* User Management Section */}
+          <div className="p-6 bg-gruvboxDark1 rounded-lg shadow-terminal">
+            <h3 className="text-2xl font-bold mb-4 text-gruvboxRed">User Management</h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[
+                {cmd: 'whoami', desc: 'Show current user'},
+                {cmd: 'sudo adduser [user]', desc: 'Create new user'},
+                {cmd: 'sudo deluser [user]', desc: 'Delete user'},
+                {cmd: 'passwd [user]', desc: 'Change user password'},
+                {cmd: 'groups [user]', desc: 'Show user groups'},
+                {cmd: 'usermod [options]', desc: 'Modify user account'},
+              ].map((item, index) => (
+                <div key={index} className="p-3 bg-gruvboxDark2 rounded hover:bg-gruvboxDark0 transition-colors">
+                  <code className="text-gruvboxOrange font-mono">{item.cmd}</code>
+                  <p className="text-sm text-gruvboxLight1 mt-1">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
