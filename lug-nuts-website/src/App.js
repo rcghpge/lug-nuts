@@ -340,7 +340,7 @@ function Home({ officers }) {
 
       <section id="officers" className="py-16 px-4 sm:px-8 bg-gruvbox-dark0 mb-12">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-gruvbox-aqua mb-12 text-center">sudo make leadership</h2>
+          <h2 className="mt-48 text-3xl font-bold text-gruvbox-aqua mb-12 text-center">sudo make leadership</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {officers.map((officer, index) => (
               <div
