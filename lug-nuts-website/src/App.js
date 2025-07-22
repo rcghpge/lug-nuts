@@ -120,30 +120,40 @@ function App() {
     <Router>
       <ScrollHandler />
       <div className="bg-gruvbox-bg text-gruvbox-fg min-h-screen font-fira-code flex flex-col">
-        <nav className="fixed w-full bg-gruvbox-bg/95 backdrop-blur-sm border-b border-gruvbox-dark2 shadow-terminal z-50">
-          <ul className="max-w-7xl mx-auto flex flex-wrap justify-center gap-4 sm:gap-8 p-4">
-            {['Home', 'Info', 'Officers'].map((item) => (
-              <li key={item}>
-                <Link
-                  to={`/?section=${item.toLowerCase().replace(' ', '')}`}
-                  className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
-                >
-                  {item}
-                </Link>
-              </li>
-            ))}
-            {['Terminal Commands', 'Videos', 'Resources'].map((item) => (
-              <li key={item}>
-                <Link
-                  to={`/${item.toLowerCase().replace(' ', '-')}`}
-                  className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
-                >
-                  {item}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      <nav className="fixed w-full bg-gruvbox-bg/95 backdrop-blur-sm border-b border-gruvbox-dark2 shadow-terminal z-50">
+        <ul className="max-w-7xl mx-auto flex flex-wrap justify-center gap-4 sm:gap-8 p-4">
+          <li>
+            <a
+              href="https://uta-lug-nuts.github.io/LnOS/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+            >
+              LN Docs
+            </a>
+          </li>
+          {['Home', 'Info', 'Officers'].map((item) => (
+            <li key={item}>
+              <Link
+                to={`/?section=${item.toLowerCase().replace(' ', '')}`}
+                className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+              >
+                {item}
+              </Link>
+            </li>
+          ))}
+          {['Terminal Commands', 'Videos', 'Resources'].map((item) => (
+            <li key={item}>
+              <Link
+                to={`/${item.toLowerCase().replace(' ', '-')}`}
+                className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+              >
+                {item}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
         <TipSidebar tip={tips[Math.floor(Math.random() * tips.length)]} />
 
