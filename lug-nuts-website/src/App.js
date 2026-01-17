@@ -105,7 +105,7 @@ function App() {
       description: 'Handles funds and financial operations.'
     },
     {
-      name: 'Robert Crocker',
+      name: 'Robert Cocker',
       role: 'LN Maintainer',
       photo: CatPhoto,
       description: 'Maintains and develops Lugnuts projects.'
