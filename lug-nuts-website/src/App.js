@@ -10,6 +10,7 @@ import CatPhoto from './assets/images/Cat.png';
 import Videos from './Videos';
 import Resources from './Resources';
 import TerminalCommands from './TerminalCommands';
+import Contact from './Contact';
 
 // Scroll handler hook
 function useScrollToTopOrSection() {
@@ -49,16 +50,20 @@ function TipSidebar({ tip }) {
       onMouseLeave={() => !isActive && setIsHovered(false)}
     >
       <div className="relative">
-        <div
-          className="absolute left-0 w-10 h-24 bg-gruvbox-dark2 rounded-l-lg cursor-pointer flex items-center justify-center hover:bg-gruvbox-dark1 transition-colors"
-          onClick={() => setIsActive(!isActive)}
-        >
+          <div
+            className="absolute left-0 w-10 h-24 bg-gruvbox-dark2 rounded-l-lg cursor-pointer flex items-center justify-center hover:bg-gruvbox-dark1 transition-colors"
+            onClick={() => setIsActive(!isActive)}
+            aria-label={isActive ? "Close tips sidebar" : "Open tips sidebar"}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setIsActive(!isActive); e.preventDefault(); } }}
+          >
           <span className="text-gruvbox-aqua transform -rotate-90 text-sm font-bold tracking-wide">
             {isHovered || isActive ? 'TIPS' : '🐧'}
           </span>
         </div>
         <div className="ml-10 bg-gruvbox-dark0 p-6 rounded-l-lg border border-gruvbox-dark2 shadow-terminal w-64">
-          <h3 className="text-gruvbox-yellow mb-3 text-sm font-mono">// PRO TIP</h3>
+          <h3 className="text-gruvbox-yellow mb-3 text-sm font-mono">{'// PRO TIP'}</h3>
           <p className="text-sm text-gruvbox-light1 leading-relaxed mb-4">{tip}</p>
           <div className="flex justify-center">
             <Donut />
@@ -79,6 +84,7 @@ function TipSidebar({ tip }) {
 
 // Main App component
 function App() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [officers] = useState([
     {
       name: 'Betim Hodza',
@@ -126,7 +132,82 @@ function App() {
       <ScrollHandler />
       <div className="bg-gruvbox-bg text-gruvbox-fg min-h-screen font-fira-code flex flex-col">
         <nav className="fixed w-full bg-gruvbox-bg/95 backdrop-blur-sm border-b border-gruvbox-dark2 shadow-terminal z-50">
-          <ul className="max-w-7xl mx-auto flex flex-wrap justify-center gap-4 sm:gap-8 p-4">
+          {/* Mobile header */}
+          <div className="md:hidden flex justify-between items-center px-4 py-3">
+            <div className="text-gruvbox-aqua font-bold text-lg">LUG_NUTS</div>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-gruvbox-light1 hover:text-gruvbox-aqua p-2"
+              aria-label="Toggle mobile menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
+          {/* Mobile menu */}
+          {isMobileMenuOpen && (
+            <div className="md:hidden bg-gruvbox-bg border-t border-gruvbox-dark2">
+              <ul className="flex flex-col px-4 py-2 space-y-2">
+                <li>
+                  <a
+                    href="https://lugtnuts.org"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+                  >
+                    Website
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://discord.gg/SJvNTGmrD5"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+                  >
+                    Discord
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/lugnuts-at-UTA"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+                  >
+                    GitHub
+                  </a>
+                </li>
+                {['Home', 'Info', 'Officers'].map((item) => (
+                  <li key={item}>
+                    <Link
+                      to={`/?section=${item.toLowerCase().replace(' ', '')}`}
+                      className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                ))}
+                {['Terminal Commands', 'Videos', 'Resources', 'Contact'].map((item) => (
+                  <li key={item}>
+                    <Link
+                      to={`/${item.toLowerCase().replace(' ', '-')}`}
+                      className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {/* Desktop menu */}
+          <ul className="hidden md:flex max-w-7xl mx-auto flex-wrap justify-center gap-4 sm:gap-8 p-4">
             <li>
               <a
                 href="https://lugtnuts.org"
@@ -167,7 +248,7 @@ function App() {
                 </Link>
               </li>
             ))}
-            {['Terminal Commands', 'Videos', 'Resources'].map((item) => (
+            {['Terminal Commands', 'Videos', 'Resources', 'Contact'].map((item) => (
               <li key={item}>
                 <Link
                   to={`/${item.toLowerCase().replace(' ', '-')}`}
@@ -187,6 +268,7 @@ function App() {
           <Route path="/videos" element={<Videos />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/terminal-commands" element={<TerminalCommands />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
 
         <Footer />
@@ -388,11 +470,12 @@ function Home({ officers }) {
                 className="group bg-gruvbox-dark1 rounded-lg p-6 border border-gruvbox-dark2 hover:border-gruvbox-aqua transition-all duration-300"
               >
                 <div className="relative mb-6">
-                  <img
-                    src={officer.photo}
-                    alt={officer.name}
-                    className="w-full h-64 object-cover rounded-md grayscale group-hover:grayscale-0 transition-all duration-300"
-                  />
+                   <img
+                     src={officer.photo}
+                     alt={`${officer.name} - ${officer.role}`}
+                     className="w-full h-64 object-cover rounded-md grayscale group-hover:grayscale-0 transition-all duration-300"
+                     loading="lazy"
+                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gruvbox-dark2/90 p-3">
                     <h3 className="text-lg font-bold text-gruvbox-light1">{officer.name}</h3>
                     <p className="text-sm text-gruvbox-green">{officer.role}</p>
