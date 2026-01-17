@@ -43,9 +43,8 @@ function TipSidebar({ tip }) {
 
   return (
     <div
-      className={`fixed right-0 top-1/2 z-50 transform -translate-y-1/2 transition-transform duration-300 ${
-        isActive ? 'translate-x-0' : 'translate-x-[calc(100%-40px)]'
-      }`}
+      className={`fixed right-0 top-1/2 z-50 transform -translate-y-1/2 transition-transform duration-300 ${isActive ? 'translate-x-0' : 'translate-x-[calc(100%-40px)]'
+        }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => !isActive && setIsHovered(false)}
     >
@@ -82,28 +81,34 @@ function TipSidebar({ tip }) {
 function App() {
   const [officers] = useState([
     {
-      name: 'Jeremiah Pitts',
+      name: 'Betim Hodza',
       role: 'President',
-      photo: JeremiahPhoto,
+      photo: BetimPhoto,
       description: 'Linux and open-source enthusiast overseeing club operations.'
     },
     {
-      name: 'Betim Hodza',
-      role: 'Co-President',
-      photo: BetimPhoto,
+      name: 'Tam Troung',
+      role: 'Vice President',
+      photo: CatPhoto,
       description: 'System administration and cybersecurity expert.'
     },
     {
-      name: 'Brett Boggs',
-      role: 'Event Coordinator',
-      photo: CatPhoto,
-      description: 'Cybersecurity specialist handling event planning.'
+      name: 'Jeremiah Pitts',
+      role: 'Treasurer',
+      photo: JeremiahPhoto,
+      description: 'Handles funds and financial operations.'
     },
     {
-      name: 'Rose Ramirez',
-      role: 'Treasurer',
+      name: 'Robert Crocker',
+      role: 'LN Maintainer',
       photo: CatPhoto,
-      description: 'Handles funds and tax info.'
+      description: 'Maintains and develops Lugnuts projects.'
+    },
+    {
+      name: 'Ryan Nyguen',
+      role: 'LN Maintainer',
+      photo: CatPhoto,
+      description: 'Maintains and develops Lugnuts projects.'
     }
   ]);
 
@@ -120,40 +125,60 @@ function App() {
     <Router>
       <ScrollHandler />
       <div className="bg-gruvbox-bg text-gruvbox-fg min-h-screen font-fira-code flex flex-col">
-      <nav className="fixed w-full bg-gruvbox-bg/95 backdrop-blur-sm border-b border-gruvbox-dark2 shadow-terminal z-50">
-        <ul className="max-w-7xl mx-auto flex flex-wrap justify-center gap-4 sm:gap-8 p-4">
-          <li>
-            <a
-              href="https://uta-lug-nuts.github.io/LnOS/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
-            >
-              LN Docs
-            </a>
-          </li>
-          {['Home', 'Info', 'Officers'].map((item) => (
-            <li key={item}>
-              <Link
-                to={`/?section=${item.toLowerCase().replace(' ', '')}`}
+        <nav className="fixed w-full bg-gruvbox-bg/95 backdrop-blur-sm border-b border-gruvbox-dark2 shadow-terminal z-50">
+          <ul className="max-w-7xl mx-auto flex flex-wrap justify-center gap-4 sm:gap-8 p-4">
+            <li>
+              <a
+                href="https://lugtnuts.org"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
               >
-                {item}
-              </Link>
+                Website
+              </a>
             </li>
-          ))}
-          {['Terminal Commands', 'Videos', 'Resources'].map((item) => (
-            <li key={item}>
-              <Link
-                to={`/${item.toLowerCase().replace(' ', '-')}`}
+            <li>
+              <a
+                href="https://discord.gg/SJvNTGmrD5"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
               >
-                {item}
-              </Link>
+                Discord
+              </a>
             </li>
-          ))}
-        </ul>
-      </nav>
+            <li>
+              <a
+                href="https://github.com/lugnuts-at-UTA"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+              >
+                GitHub
+              </a>
+            </li>
+            {['Home', 'Info', 'Officers'].map((item) => (
+              <li key={item}>
+                <Link
+                  to={`/?section=${item.toLowerCase().replace(' ', '')}`}
+                  className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+                >
+                  {item}
+                </Link>
+              </li>
+            ))}
+            {['Terminal Commands', 'Videos', 'Resources'].map((item) => (
+              <li key={item}>
+                <Link
+                  to={`/${item.toLowerCase().replace(' ', '-')}`}
+                  className="text-gruvbox-light1 hover:text-gruvbox-aqua px-3 py-2 rounded-md transition-colors"
+                >
+                  {item}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
         <TipSidebar tip={tips[Math.floor(Math.random() * tips.length)]} />
 
@@ -224,7 +249,7 @@ function Home({ officers }) {
     e.preventDefault();
     let output = '';
     let newDir = currentDir;
-    
+
     if (terminalInput === 'ls') {
       output = getLsOutput(currentDir);
     } else if (terminalInput === 'meow') {
@@ -251,7 +276,7 @@ function Home({ officers }) {
     } else {
       output = `Command not found: ${terminalInput}. Try "ls", "cd", "pwd", or "echo"`;
     }
-    
+
     setTerminalOutput([
       ...terminalOutput,
       { command: terminalInput, output: output, dir: currentDir }
@@ -268,9 +293,14 @@ function Home({ officers }) {
               LUG_NUTS
             </h1>
             <p className="text-xl text-gruvbox-light1 mb-6">$ sudo apt-get install knowledge</p>
-            <div className="inline-block px-6 py-3 bg-gruvbox-dark2 rounded-md text-gruvbox-orange">
+            <div className="inline-block px-6 py-3 bg-gruvbox-dark2 rounded-md text-gruvbox-orange mb-6">
               <span className="blink">▋</span> University of Texas at Arlington
             </div>
+            <p className="text-lg text-gruvbox-light1 mb-4">
+              Lugnuts is a community for Linux and Unix enthusiasts at the University of Texas at Arlington. We're here to share knowledge about Linux, make open source contributions, work on projects and talk about Linux. We bring together students passionate about open-source technology to share knowledge, explore Linux topics, and collaborate on exciting projects. Whether you're a newbie or a seasoned sysadmin, join us to talk distros, troubleshoot code, and dive into the world of terminal wizardry.
+            </p>
+            <p className="text-lg text-gruvbox-light1">$ echo "Like Nuts and Bolts, Linux is always work."</p>
+            <p className="text-lg text-gruvbox-light1">Like Nuts and Bolts, Linux is always work.</p>
           </div>
         </div>
       </section>
